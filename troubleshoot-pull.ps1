@@ -1,5 +1,11 @@
 #Requires -RunAsAdministrator
 
+$LogFile = "C:\temp\docker_debug.log"
+$LogDir = Split-Path $LogFile
+if (!(Test-Path $LogDir)) { New-Item -ItemType Directory -Path $LogDir | Out-Null }
+
+Start-Transcript -Path $LogFile -Append -Force
+
 function Wait-DockerUp {
   for ($i=0; $i -lt 30; $i++) {
     try { docker info | Out-Null; if ($LASTEXITCODE -eq 0) { return } } catch {}
@@ -35,3 +41,5 @@ try {
 } finally {
   docker info | Select-String 'Debug Mode' | Write-Host
 }
+
+Stop-Transcript
