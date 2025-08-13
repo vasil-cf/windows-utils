@@ -29,7 +29,7 @@ function Wait-DockerDown {
 sc.exe qc docker | Out-Host
 sc.exe stop docker
 Wait-DockerDown
-sc.exe config docker binPath= "C:\Windows\system32\dockerd.exe --run-service --service-name docker --debug"
+sc.exe config docker binPath= "\"C:\Program Files\Docker\dockerd.exe\" --run-service --debug"
 sc.exe start docker
 Wait-DockerUp
 docker info | Select-String 'Debug Mode' | Write-Host
@@ -48,7 +48,7 @@ Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='docker'; St
 try {
   sc.exe stop docker
   Wait-DockerDown
-  sc.exe config docker binPath= "C:\Windows\system32\dockerd.exe --run-service --service-name docker"
+  sc.exe config docker binPath= "\"C:\Program Files\Docker\dockerd.exe\" --run-service"
   sc.exe start docker
   Wait-DockerUp
 } finally {
