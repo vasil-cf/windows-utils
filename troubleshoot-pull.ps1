@@ -9,6 +9,7 @@ function Wait-DockerUp {
 }
 
 # Enable debug
+sc.exe qc docker
 sc.exe stop docker
 sc.exe config docker binPath= "C:\Windows\system32\dockerd.exe --run-service --service-name docker --debug"
 sc.exe start docker
