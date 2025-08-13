@@ -16,8 +16,8 @@ Wait-DockerUp
 docker info | Select-String 'Debug Mode' | Write-Host
 
 # Repro: clean + pull (ignore if image isn't present)
-docker image rm quay.io/codefresh/cf-git-cloner:windows-21H2bad 2>$null
-docker pull quay.io/codefresh/cf-git-cloner:windows-21H2bad
+docker image rm quay.io/codefresh/cf-git-cloner:windows-21H2 2>$null
+docker pull quay.io/codefresh/cf-git-cloner:windows-21H2
 
 # Show full, untruncated daemon events for last 30 minutes
 Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='docker'; StartTime=(Get-Date).AddMinutes(-1)} |
