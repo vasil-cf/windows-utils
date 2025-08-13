@@ -9,9 +9,9 @@ function Wait-DockerUp {
 }
 
 # Enable debug
-sc.exe stop docker | Out-Null
-sc.exe config docker binPath= "C:\Windows\system32\dockerd.exe --run-service --service-name docker --debug" | Out-Null
-sc.exe start docker | Out-Null
+sc.exe stop docker
+sc.exe config docker binPath= "C:\Windows\system32\dockerd.exe --run-service --service-name docker --debug"
+sc.exe start docker
 Wait-DockerUp
 docker info | Select-String 'Debug Mode' | Write-Host
 
@@ -27,9 +27,9 @@ Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='docker'; St
 
 # Always revert service to non-debug
 try {
-  sc.exe stop docker | Out-Null
-  sc.exe config docker binPath= "C:\Windows\system32\dockerd.exe --run-service --service-name docker" | Out-Null
-  sc.exe start docker | Out-Null
+  sc.exe stop docker
+  sc.exe config docker binPath= "C:\Windows\system32\dockerd.exe --run-service --service-name docker"
+  sc.exe start docker
   Wait-DockerUp
 } finally {
   docker info | Select-String 'Debug Mode' | Write-Host
