@@ -7,16 +7,28 @@ if (!(Test-Path $LogDir)) { New-Item -ItemType Directory -Path $LogDir | Out-Nul
 Start-Transcript -Path $LogFile -Append -Force
 
 function Wait-DockerUp {
-  for ($i=0; $i -lt 30; $i++) {
+  for ($i=0; $i -lt 70; $i++) {
     try { docker info | Out-Null; if ($LASTEXITCODE -eq 0) { return } } catch {}
     Start-Sleep -Seconds 1
   }
   throw "Docker daemon didn't come up in time."
 }
 
+function Wait-DockerDown {
+  for ($i=0; $i -lt 70; $i++) {
+    try {
+      $svc = Get-Service docker -ErrorAction Stop
+      if ($svc.Status -eq 'Stopped') { return }
+    } catch {}
+    Start-Sleep -Seconds 1
+  }
+  throw "Docker service didn't stop in time."
+}
+
 # Enable debug
 sc.exe qc docker | Out-Host
 sc.exe stop docker
+Wait-DockerDown
 sc.exe config docker binPath= "C:\Windows\system32\dockerd.exe --run-service --service-name docker --debug"
 sc.exe start docker
 Wait-DockerUp
@@ -35,6 +47,7 @@ Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='docker'; St
 # Always revert service to non-debug
 try {
   sc.exe stop docker
+  Wait-DockerDown
   sc.exe config docker binPath= "C:\Windows\system32\dockerd.exe --run-service --service-name docker"
   sc.exe start docker
   Wait-DockerUp
