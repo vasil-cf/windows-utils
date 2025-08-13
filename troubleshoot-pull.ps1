@@ -1,5 +1,4 @@
 #Requires -RunAsAdministrator
-#$ErrorActionPreference = 'Stop'
 
 function Wait-DockerUp {
   for ($i=0; $i -lt 30; $i++) {
