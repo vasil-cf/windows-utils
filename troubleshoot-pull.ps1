@@ -20,7 +20,7 @@ docker image rm quay.io/codefresh/cf-git-cloner:windows-21H2bad 2>$null
 docker pull quay.io/codefresh/cf-git-cloner:windows-21H2bad
 
 # Show full, untruncated daemon events for last 30 minutes
-Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='docker'; StartTime=(Get-Date).AddMinutes(-30)} |
+Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='docker'; StartTime=(Get-Date).AddMinutes(-1)} |
   Sort-Object TimeCreated |
   Select-Object TimeCreated, Id, LevelDisplayName, @{n='Message'; e={$_.Message}} |
   Format-List | Out-String -Width 8192 | Write-Output
